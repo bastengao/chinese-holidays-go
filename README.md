@@ -6,7 +6,6 @@
 
     go get github.com/bastengao/chinese-holidays-go
 
-
 ### Usage
 
 ```go
@@ -14,6 +13,16 @@ import (
     "github.com/bastengao/chinese-holidays-go/holidays"
 )
 
-holidays.isHoliday(d)
-holidays.isWorkingday(d)
+d := time.Date(2019, 10, 1, 0, 0, 0, 0, china)
+holidays.isHoliday(d)    // true
+holidays.isWorkingday(d) // false
 ```
+
+### Features
+
+- [x] bundled data
+    - support [2019](http://www.gov.cn/zhengce/content/2018-12/06/content_5346276.htm) and 5.1 changes(http://www.gov.cn/zhengce/content/2019-03/22/content_5375877.htm)
+    - support [2018](http://www.gov.cn/zhengce/content/2017-11/30/content_5243579.htm)
+    - support [2017](http://www.gov.cn/zhengce/content/2016-12/01/content_5141603.htm)
+    - support 2016
+- [ ] online data
