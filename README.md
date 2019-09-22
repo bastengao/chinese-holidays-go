@@ -1,5 +1,7 @@
 # chinese-holidays-go
 
+![](https://github.com/bastengao/chinese-holidays-go/workflows/Go/badge.svg)
+
 提供具有中国特色的休假安排或者工作日查询。
 
 ### Install
