@@ -23,7 +23,7 @@ type event struct {
 	Range []string
 }
 
-func (e event) isHolidays() bool {
+func (e event) isHoliday() bool {
 	return e.Type == typeHoliday
 }
 
