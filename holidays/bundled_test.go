@@ -5,8 +5,12 @@ import (
 )
 
 func TestLoadData(t *testing.T) {
-	_, err := loadData()
+	events, err := loadData()
 	if err != nil {
 		t.Error(err)
+	}
+
+	if len(events) != 61 {
+		t.Error(len(events))
 	}
 }
