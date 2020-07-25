@@ -44,7 +44,7 @@ func (e event) days() ([]time.Time, error) {
 			return nil, err
 		}
 
-		end, err := parseTime(e.Range[0])
+		end, err := parseTime(e.Range[1])
 		if err != nil {
 			return nil, err
 		}
