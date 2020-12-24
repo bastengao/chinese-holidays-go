@@ -1,3 +1,4 @@
+//go:generate statik -src=./data
 package holidays
 
 import (

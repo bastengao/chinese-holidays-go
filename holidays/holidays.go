@@ -1,3 +1,4 @@
+// Package holidays supply holidays query.
 package holidays
 
 import (
