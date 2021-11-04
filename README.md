@@ -23,6 +23,7 @@ holidays.isWorkingday(d) // false
 ## Features
 
 - [x] bundled data
+  - support [2022](http://www.gov.cn/zhengce/content/2021-10/25/content_5644835.htm)
   - support [2021](http://www.gov.cn/zhengce/content/2020-11/25/content_5564127.htm)
   - support [2020](http://www.gov.cn/zhengce/content/2019-11/21/content_5454164.htm)
   - support [2019](http://www.gov.cn/zhengce/content/2018-12/06/content_5346276.htm) and 5.1 [changes](http://www.gov.cn/zhengce/content/2019-03/22/content_5375877.htm)
