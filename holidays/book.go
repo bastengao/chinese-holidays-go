@@ -2,6 +2,8 @@ package holidays
 
 import "time"
 
+var _ Queryer = (*book)(nil)
+
 type book struct {
 	events []event
 	index  map[string]event
@@ -22,24 +24,24 @@ func newBookfromEvents(events []event) (book, error) {
 	return book{events, index}, nil
 }
 
-func (b book) isHoliday(d time.Time) bool {
+func (b *book) IsHoliday(d time.Time) (bool, error) {
 	e := b.findEvent(d)
 
 	if e == nil {
-		return isWeekend(d)
+		return isWeekend(d), nil
 	}
 
-	return e.isHoliday()
+	return e.isHoliday(), nil
 }
 
-func (b book) isWorkingday(d time.Time) bool {
+func (b *book) IsWorkingday(d time.Time) (bool, error) {
 	e := b.findEvent(d)
 
 	if e == nil {
-		return !isWeekend(d)
+		return !isWeekend(d), nil
 	}
 
-	return e.isWorkingday()
+	return e.isWorkingday(), nil
 }
 
 func (b book) findEvent(d time.Time) *event {

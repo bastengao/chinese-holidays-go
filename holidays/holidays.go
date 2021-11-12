@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-var b *book
+var b Queryer
 
 func init() {
 	events, err := loadData()
@@ -22,24 +22,38 @@ func init() {
 	}
 }
 
+// BundleQueryer returns bundle queryer.
+func BundleQueryer() (Queryer, error) {
+	err := checkInitBook()
+	if err != nil {
+		return nil, err
+	}
+
+	return b, nil
+}
+
 // IsHoliday checks given date is holiday or not.
+//
+// Deprecated: Use Queryer.IsHoliday instead.
 func IsHoliday(date time.Time) (bool, error) {
 	err := checkInitBook()
 	if err != nil {
 		return false, err
 	}
 
-	return b.isHoliday(date), nil
+	return b.IsHoliday(date)
 }
 
 // IsWorkingday checks given date is working day or not.
+//
+// Deprecated: Use Queryer.IsWorkingday instead.
 func IsWorkingday(date time.Time) (bool, error) {
 	err := checkInitBook()
 	if err != nil {
 		return false, err
 	}
 
-	return b.isWorkingday(date), nil
+	return b.IsWorkingday(date)
 }
 
 func checkInitBook() error {

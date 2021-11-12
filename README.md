@@ -15,9 +15,14 @@ import (
     "github.com/bastengao/chinese-holidays-go/holidays"
 )
 
+queryer, err := holidays.BundleQueryer()
+if err != nil {
+    panic(err)
+}
+
 d := time.Date(2019, 10, 1, 0, 0, 0, 0, china)
-holidays.isHoliday(d)    // true
-holidays.isWorkingday(d) // false
+queryer.IsHoliday(d)    // true
+queryer.IsWorkingday(d) // false
 ```
 
 ## Features
