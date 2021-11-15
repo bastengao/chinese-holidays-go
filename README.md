@@ -67,4 +67,4 @@ queryer.IsHoliday(d)
   - support [2018](http://www.gov.cn/zhengce/content/2017-11/30/content_5243579.htm)
   - support [2017](http://www.gov.cn/zhengce/content/2016-12/01/content_5141603.htm)
   - support 2016
-- [ ] online data
+- [x] [online data](https://github.com/bastengao/chinese-holidays-data)
