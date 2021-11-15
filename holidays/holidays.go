@@ -22,7 +22,7 @@ func init() {
 	}
 }
 
-// BundleQueryer returns bundle queryer.
+// BundleQueryer returns a bundle queryer.
 func BundleQueryer() (Queryer, error) {
 	err := checkInitBook()
 	if err != nil {

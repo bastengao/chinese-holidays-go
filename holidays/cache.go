@@ -26,7 +26,7 @@ type entry struct {
 	LastModified string `json:"last_modified"`
 }
 
-// NewCacheQueryer returns a new Queryer that fetches online data and updates every day.
+// NewCacheQueryer returns a new Queryer that fetches online data and check updates every day.
 func NewCacheQueryer() (Queryer, error) {
 	url := fmt.Sprintf("%s/index.json", dataEndpoint)
 	b, err := downloadData(url)

@@ -11,6 +11,8 @@
 
 ## Usage
 
+Bundle Query
+
 ```go
 import (
     "github.com/bastengao/chinese-holidays-go/holidays"
@@ -24,6 +26,35 @@ if err != nil {
 d := time.Date(2019, 10, 1, 0, 0, 0, 0, china)
 queryer.IsHoliday(d)    // true
 queryer.IsWorkingday(d) // false
+```
+
+Cache Queryer is a Queryer that fetches online data and check updates every day.
+
+```go
+queryer, err := holidays.NewCacheQueryer()
+if err != nil {
+    panic(err)
+}
+
+queryer.IsHoliday(d)
+```
+
+Multiple Queryer is a Queryer that delegates query to underlying multiple Queryers.
+Try each queryers in order until one returns a result.
+
+```go
+bundleQueryer, err := holidays.BundleQueryer()
+if err != nil {
+    panic(err)
+}
+
+cacheQueryer, err := holidays.NewCacheQueryer()
+if err != nil {
+    panic(err)
+}
+
+queryer := holidays.NewMultipleQueryer(cacheQueryer, bundleQueryer)
+queryer.IsHoliday(d)
 ```
 
 ## Features
