@@ -60,7 +60,7 @@ queryer.IsHoliday(d)
 ## Features
 
 - [x] bundled data
-  - support [2024](https://www.gov.cn/yaowen/liebiao/202310/content_6911560.htm)
+  - support [2024](https://www.gov.cn/zhengce/content/202310/content_6911527.htm)
   - support [2023](http://www.gov.cn/zhengce/content/2022-12/08/content_5730844.htm)
   - support [2022](http://www.gov.cn/zhengce/content/2021-10/25/content_5644835.htm)
   - support [2021](http://www.gov.cn/zhengce/content/2020-11/25/content_5564127.htm)
