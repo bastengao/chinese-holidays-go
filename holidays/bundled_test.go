@@ -10,7 +10,7 @@ func TestLoadData(t *testing.T) {
 		t.Error(err)
 	}
 
-	if len(events) != 98 {
+	if len(events) != 113 {
 		t.Error(len(events))
 	}
 }

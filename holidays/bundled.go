@@ -1,25 +1,21 @@
-//go:generate statik -src=./data
 package holidays
 
 import (
+	"embed"
 	"encoding/json"
-	"os"
-
-	_ "github.com/bastengao/chinese-holidays-go/holidays/statik" // load data
-	"github.com/rakyll/statik/fs"
+	"io/fs"
 )
 
+//go:embed data/*
+var dfs embed.FS
+
 func loadData() ([]event, error) {
-	statikFS, err := fs.New()
-	if err != nil {
-		return nil, err
-	}
 	var events []event
-	err = fs.Walk(statikFS, "/", func(path string, info os.FileInfo, err error) error {
+	err := fs.WalkDir(dfs, ".", func(path string, d fs.DirEntry, err error) error {
 		if path == "/" {
 			return err
 		}
-		b, err := fs.ReadFile(statikFS, path)
+		b, err := dfs.ReadFile(path)
 		if err != nil {
 			return nil
 		}
