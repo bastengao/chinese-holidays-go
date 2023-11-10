@@ -15,7 +15,7 @@ func init() {
 	if lerr != nil {
 		fmt.Println(lerr)
 		// 修复某些win机器报panic time missing Location in call to…错误
-		location = time.FixedZone("UTC+8", 8*3600)
+		location = time.FixedZone("CST", 8*3600)
 	}
 }
 
