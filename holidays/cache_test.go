@@ -9,6 +9,7 @@ func TestNewCacheQueryer(t *testing.T) {
 	queryer, err := NewCacheQueryer()
 	if err != nil {
 		t.Error(err)
+		t.FailNow()
 	}
 
 	if queryer == nil {

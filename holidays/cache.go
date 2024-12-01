@@ -4,7 +4,7 @@ import (
 	"crypto/sha256"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"log"
 	"net/http"
 	"sync"
@@ -12,6 +12,8 @@ import (
 )
 
 const dataEndpoint = "http://chinese-holidays-data.basten.me/data"
+
+var userAgent = fmt.Sprintf("chinese-holidays-go/%s", version)
 
 var _ Queryer = (*cache)(nil)
 
@@ -115,7 +117,7 @@ func newBookFromEntries(data []byte) (*book, error) {
 
 		e, err := parseEvents(b)
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("parse year %d: %w", entry.Year, err)
 		}
 
 		events = append(events, e...)
@@ -130,13 +132,22 @@ func newBookFromEntries(data []byte) (*book, error) {
 }
 
 func downloadData(url string) ([]byte, error) {
-	resp, err := http.Get(url)
+	req, err := http.NewRequest(http.MethodGet, url, nil)
+	if err != nil {
+		return nil, err
+	}
+	req.Header.Set("UserAgent", userAgent)
+
+	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		return nil, err
 	}
 	defer resp.Body.Close()
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("download error: %d", resp.StatusCode)
+	}
 
-	b, err := ioutil.ReadAll(resp.Body)
+	b, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
 	}

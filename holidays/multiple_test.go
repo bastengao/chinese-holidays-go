@@ -9,11 +9,13 @@ func TestNewMultipleQueryer(t *testing.T) {
 	bundleQueryer, err := BundleQueryer()
 	if err != nil {
 		t.Error(err)
+		t.FailNow()
 	}
 
 	cacheQueryer, err := NewCacheQueryer()
 	if err != nil {
 		t.Error(err)
+		t.FailNow()
 	}
 
 	queryer := NewMultipleQueryer(cacheQueryer, bundleQueryer)
@@ -21,6 +23,7 @@ func TestNewMultipleQueryer(t *testing.T) {
 	r, err := queryer.IsHoliday(d)
 	if err != nil {
 		t.Error(err)
+		t.FailNow()
 	}
 	if !r {
 		t.Fail()

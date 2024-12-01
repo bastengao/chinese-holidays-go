@@ -6,6 +6,8 @@ import (
 	"time"
 )
 
+const version = "1.6.0"
+
 var b Queryer
 
 func init() {
