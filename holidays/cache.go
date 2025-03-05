@@ -3,6 +3,7 @@ package holidays
 import (
 	"crypto/sha256"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"log"
@@ -15,12 +16,15 @@ const dataEndpoint = "http://chinese-holidays-data.basten.me/data"
 
 var userAgent = fmt.Sprintf("chinese-holidays-go/%s", version)
 
+var errNotModified = errors.New("index not modified")
+
 var _ Queryer = (*cache)(nil)
 
 type cache struct {
 	l             sync.RWMutex
 	b             *book
 	indexChecksum [sha256.Size]byte
+	indexMtime    string
 }
 
 type entry struct {
@@ -31,7 +35,7 @@ type entry struct {
 // NewCacheQueryer returns a new Queryer that fetches online data and check updates every day.
 func NewCacheQueryer() (Queryer, error) {
 	url := fmt.Sprintf("%s/index.json", dataEndpoint)
-	b, err := downloadData(url)
+	b, mtime, err := downloadData(url, "")
 	if err != nil {
 		return nil, err
 	}
@@ -44,6 +48,7 @@ func NewCacheQueryer() (Queryer, error) {
 	cache := &cache{
 		b:             book,
 		indexChecksum: sha256.Sum256(b),
+		indexMtime:    mtime,
 	}
 	go cache.updateInterval()
 
@@ -78,7 +83,11 @@ func (c *cache) updateInterval() {
 
 func (c *cache) update() error {
 	url := fmt.Sprintf("%s/index.json", dataEndpoint)
-	b, err := downloadData(url)
+	b, mtime, err := downloadData(url, c.indexMtime)
+	// 如果内容没有变化直接退出
+	if errors.Is(err, errNotModified) {
+		return nil
+	}
 	if err != nil {
 		return err
 	}
@@ -96,6 +105,7 @@ func (c *cache) update() error {
 	c.l.Lock()
 	c.b = newBook
 	c.indexChecksum = checkSum
+	c.indexMtime = mtime
 	c.l.Unlock()
 	return nil
 }
@@ -110,7 +120,7 @@ func newBookFromEntries(data []byte) (*book, error) {
 	var events []event
 	for _, entry := range entries {
 		url := fmt.Sprintf("%s/%d.json", dataEndpoint, entry.Year)
-		b, err := downloadData(url)
+		b, _, err := downloadData(url, "")
 		if err != nil {
 			return nil, err
 		}
@@ -131,26 +141,34 @@ func newBookFromEntries(data []byte) (*book, error) {
 	return &book, nil
 }
 
-func downloadData(url string) ([]byte, error) {
+// downloadData 返回内容和 Last-Modified 头
+func downloadData(url string, mtime string) ([]byte, string, error) {
 	req, err := http.NewRequest(http.MethodGet, url, nil)
 	if err != nil {
-		return nil, err
+		return nil, "", err
 	}
 	req.Header.Set("UserAgent", userAgent)
+	if mtime != "" {
+		req.Header.Set("If-Modified-Since", mtime)
+	}
 
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
-		return nil, err
+		return nil, "", err
 	}
 	defer resp.Body.Close()
-	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("download error: %d", resp.StatusCode)
+
+	if resp.StatusCode == http.StatusNotModified {
+		return nil, "", errNotModified
+	} else if resp.StatusCode != http.StatusOK {
+		return nil, "", fmt.Errorf("download error: %d", resp.StatusCode)
 	}
 
+	newMtime := resp.Header.Get("Last-Modified")
 	b, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return nil, err
+		return nil, "", err
 	}
 
-	return b, nil
+	return b, newMtime, nil
 }
